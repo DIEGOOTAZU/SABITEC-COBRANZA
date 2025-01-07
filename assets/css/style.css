@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .card {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .sidebar {
+    background-color: #343a40;
+    color: #fff;
+    height: 100vh;
+  }
+  
+  .sidebar .nav-link {
+    color: #fff;
+    padding: 10px 20px;
+    display: block;
+  }
+  
+  .sidebar .nav-link:hover {
+    background-color: #495057;
+  }
+  
