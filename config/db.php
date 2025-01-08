@@ -3,7 +3,7 @@
 $host = 'dpg-ctvb9epu0jms73b0j5d0-a'; // Reemplaza con el "Nombre de host" de Render
 $dbname = 'db_sabitec';               // Reemplaza con el "Base de datos" de Render
 $username = 'db_sabitec_user';        // Reemplaza con el "Nombre de usuario" de Render
-$password = 'Ruy8SL8VOIfCpLwS07EtSc4BF7oBeJmP'; // Reemplaza con la "Contraseña" de Render
+$password = 'Ruy8SL8VOIfCpLwS07etSc4BF7oBeJmP'; // Reemplaza con la "Contraseña" de Render
 $port = 5432;                         // Reemplaza con el "Puerto" de Render
 
 try {
