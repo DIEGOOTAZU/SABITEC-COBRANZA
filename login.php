@@ -1,53 +1,41 @@
 <?php
+// Iniciar la sesión antes de cualquier salida
+session_start();
+
 // Incluir la conexión a la base de datos
 require_once 'config/db.php';
 
-// Iniciar la sesión
-session_start();
-
 // Manejar el envío del formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Capturar los datos del formulario
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
-    // Verificar que los campos no estén vacíos
     if (!empty($username) && !empty($password)) {
         try {
-            // Preparar la consulta para buscar el usuario
             $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
             $stmt->bindParam(':username', $username);
             $stmt->execute();
 
-            // Obtener el resultado
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Verificar si el usuario existe
-            if ($user) {
-                // Comparar la contraseña ingresada con la almacenada en la base de datos
-                if ($password === $user['password']) {
-                    // Credenciales correctas: guardar datos en la sesión
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['username'] = $user['username'];
+            if ($user && password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['username'];
 
-                    // Redirigir al index
-                    header("Location: index.php");
-                    exit;
-                } else {
-                    $error = "Contraseña incorrecta.";
-                }
+                // Redirigir al index
+                header("Location: index.php");
+                exit;
             } else {
-                $error = "El usuario no existe.";
+                $error = "Credenciales incorrectas.";
             }
         } catch (PDOException $e) {
-            $error = "Error en la conexión: " . $e->getMessage();
+            $error = "Error de conexión: " . $e->getMessage();
         }
     } else {
         $error = "Por favor, complete todos los campos.";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-container">
         <h2>Iniciar Sesión</h2>
         <?php if (isset($error)): ?>
-            <div class="alert alert-danger text-center"><?= $error ?></div>
+            <div class="alert alert-danger text-center"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
         <form method="POST" action="">
             <div class="form-group mb-3">
