@@ -137,6 +137,90 @@ try {
     </table>
 </div>
 
+
+<!-- Botón para abrir el modal -->
+<button class="btn btn-primary mb-3" data-toggle="modal" data-target="#nuevoVehiculoModal">Nuevo Vehículo</button>
+
+<!-- Modal para agregar un nuevo vehículo -->
+<div class="modal fade" id="nuevoVehiculoModal" tabindex="-1" role="dialog" aria-labelledby="nuevoVehiculoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nuevoVehiculoModalLabel">Agregar Nuevo Vehículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formNuevoVehiculo" method="POST" action="agregar_vehiculo.php">
+                    <div class="form-group">
+                        <label for="placa">Placa</label>
+                        <input type="text" name="placa" id="placa" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="marca">Marca</label>
+                        <input type="text" name="marca" id="marca" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modelo">Modelo</label>
+                        <input type="text" name="modelo" id="modelo" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="color">Color</label>
+                        <input type="text" name="color" id="color" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="anio">Año</label>
+                        <input type="number" name="anio" id="anio" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Guardar Vehículo</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar un vehículo -->
+<div class="modal fade" id="editarVehiculoModal" tabindex="-1" role="dialog" aria-labelledby="editarVehiculoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarVehiculoModalLabel">Editar Vehículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditarVehiculo" method="POST" action="editar_vehiculo.php">
+                    <input type="hidden" name="id" id="editarVehiculoId">
+                    <div class="form-group">
+                        <label for="editarPlaca">Placa</label>
+                        <input type="text" name="placa" id="editarPlaca" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editarMarca">Marca</label>
+                        <input type="text" name="marca" id="editarMarca" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editarModelo">Modelo</label>
+                        <input type="text" name="modelo" id="editarModelo" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editarColor">Color</label>
+                        <input type="text" name="color" id="editarColor" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editarAnio">Año</label>
+                        <input type="number" name="anio" id="editarAnio" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     $(document).ready(function () {
         $('.submenu-toggle').on('click', function (e) {
@@ -168,14 +252,18 @@ try {
     }
 
     function editarVehiculo(id, placa, marca, modelo, color, anio) {
-        $('#vehiculoId').val(id);
-        $('#editarPlaca').val(placa);
-        $('#editarMarca').val(marca);
-        $('#editarModelo').val(modelo);
-        $('#editarColor').val(color);
-        $('#editarAnio').val(anio);
-        $('#editarVehiculoModal').modal('show');
-    }
+    // Llenar el formulario del modal con los datos del vehículo seleccionado
+    $('#editarVehiculoId').val(id);
+    $('#editarPlaca').val(placa);
+    $('#editarMarca').val(marca);
+    $('#editarModelo').val(modelo);
+    $('#editarColor').val(color);
+    $('#editarAnio').val(anio);
+
+    // Mostrar el modal
+    $('#editarVehiculoModal').modal('show');
+}
+
 </script>
 </body>
 </html>

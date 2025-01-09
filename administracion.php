@@ -13,6 +13,7 @@ require_once 'config/db.php';
 
 // Variables iniciales
 $datosContrato = null;
+$datosVehiculo = null;
 $pagos = [];
 $mensajeError = "";
 
@@ -31,6 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtPagos = $conn->prepare("SELECT * FROM detalle_pagos WHERE data_cobranza_id = :id");
             $stmtPagos->execute([':id' => $datosContrato['id']]);
             $pagos = $stmtPagos->fetchAll(PDO::FETCH_ASSOC);
+
+            // Obtener los datos del vehículo asociado
+            $stmtVehiculo = $conn->prepare("SELECT * FROM vehiculos WHERE placa = :placa");
+            $stmtVehiculo->execute([':placa' => $placa]);
+            $datosVehiculo = $stmtVehiculo->fetch(PDO::FETCH_ASSOC);
         } else {
             $mensajeError = "No se encontró un contrato con la placa especificada.";
         }
@@ -39,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -157,14 +164,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p><strong>Monto Total:</strong> $<?= htmlspecialchars($datosContrato['monto_total']) ?></p>
             </div>
             <!-- Información del vehículo -->
-            <div class="details-section">
-                <h4>Información del Vehículo</h4>
-                <p><strong>Placa:</strong> <?= htmlspecialchars($datosContrato['placa']) ?></p>
-                <p><strong>Marca:</strong> <?= htmlspecialchars($datosContrato['marca'] ?? 'N/A') ?></p>
-                <p><strong>Modelo:</strong> <?= htmlspecialchars($datosContrato['modelo'] ?? 'N/A') ?></p>
-                <p><strong>Color:</strong> <?= htmlspecialchars($datosContrato['color'] ?? 'N/A') ?></p>
-                <p><strong>Año:</strong> <?= htmlspecialchars($datosContrato['anio'] ?? 'N/A') ?></p>
-            </div>
+<div class="details-section">
+    <h4>Información del Vehículo</h4>
+    <?php if ($datosVehiculo): ?>
+        <p><strong>Placa:</strong> <?= htmlspecialchars($datosVehiculo['placa']) ?></p>
+        <p><strong>Marca:</strong> <?= htmlspecialchars($datosVehiculo['marca']) ?></p>
+        <p><strong>Modelo:</strong> <?= htmlspecialchars($datosVehiculo['modelo']) ?></p>
+        <p><strong>Color:</strong> <?= htmlspecialchars($datosVehiculo['color']) ?></p>
+        <p><strong>Año:</strong> <?= htmlspecialchars($datosVehiculo['anio']) ?></p>
+    <?php else: ?>
+        <p>No se encontraron datos del vehículo para la placa especificada.</p>
+    <?php endif; ?>
+</div>
+
 
     
         </div>

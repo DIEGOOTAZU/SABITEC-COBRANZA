@@ -73,32 +73,41 @@ try {
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h3 class="text-center">Sabitec GPS</h3>
-        <a href="index.php">Inicio</a>
-        <div class="has-submenu">
-            <a href="#" class="submenu-toggle">Contratos</a>
-            <div class="submenu">
-                <a href="agregar_contrato.php">Agregar Nuevo Contrato</a>
-                <a href="administrar_contratos.php">Administrar Contratos</a>
-            </div>
+<div class="sidebar">
+    <h3 class="text-center">Sabitec GPS</h3>
+    <a href="index.php">Inicio</a>
+    <div class="has-submenu">
+        <a href="#" onclick="toggleSubmenu(event)">Contratos</a>
+        <div class="submenu">
+            <a href="agregar_contrato.php">Agregar Nuevo Contrato</a>
+            <a href="administrar_contratos.php">Administrar Contratos</a>
         </div>
-        <div class="has-submenu">
-            <a href="#" class="submenu-toggle">Servicios</a>
-            <div class="submenu">
-                <a href="consulta_pagos.php">Consulta de Pagos</a>
-                <a href="generar_reportes.php">Generar Reportes</a>
-            </div>
-        </div>
-        <a href="#">Cobranzas</a>
-        <a href="administracion.php">Administración</a>
-        <a href="clientes.php">Clientes</a>
-        <a href="vehiculos.php">Vehículos</a>
-        <a href="#">Tipos de Servicios</a>
-        
-        <a href="logout.php">Cerrar Sesión</a>
     </div>
+    <div class="has-submenu">
+        <a href="#" onclick="toggleSubmenu(event)">Servicios</a>
+        <div class="submenu">
+            <a href="consulta_pagos.php">Consulta de Pagos</a>
+            <a href="generar_reportes.php">Generar Reportes</a>
+        </div>
+    </div>
+    <a href="#">Cobranzas</a>
+    <a href="administracion.php">Administración</a>
+    <a href="clientes.php">Clientes</a>
+    <a href="vehiculos.php">Vehículos</a>
+    <a href="#">Tipos de Servicios</a>
+    <a href="logout.php">Cerrar Sesión</a>
+</div>
+
+<script>
+    // Función para mostrar/ocultar el submenú
+    function toggleSubmenu(event) {
+        event.preventDefault();
+        const parent = event.target.closest('.has-submenu');
+        parent.classList.toggle('active');
+    }
+</script>
+
+
 
     <!-- Main Content -->
     <div class="main-content">
