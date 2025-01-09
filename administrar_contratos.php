@@ -110,11 +110,12 @@ try {
                     <th>Cliente</th>
                     <th>Mensualidad</th>
                     <th>Letra (Meses)</th>
-                    <th>Inicial</th> <!-- Nueva columna inicial -->
-                    <th>Monto Total</th> <!-- Nueva columna monto total -->
+                    <th>Inicial</th>
+                    <th>Monto Total</th>
                     <th>Fecha de Pago</th>
                     <th>Fecha de Contrato</th>
                     <th>Teléfono</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -125,12 +126,78 @@ try {
                         <td><?= htmlspecialchars($contrato['cliente']) ?></td>
                         <td><?= htmlspecialchars($contrato['mensualidad_real']) ?></td>
                         <td><?= htmlspecialchars($contrato['letra'] ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($contrato['inicial'] ?? 'N/A') ?></td> <!-- Mostrar inicial -->
-                        <td><?= htmlspecialchars($contrato['monto_total'] ?? 'N/A') ?></td> <!-- Mostrar monto total -->
+                        <td><?= htmlspecialchars($contrato['inicial'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($contrato['monto_total'] ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($contrato['fecha_pago']) ?></td>
                         <td><?= htmlspecialchars($contrato['fecha_contrato']) ?></td>
                         <td><?= htmlspecialchars($contrato['telefono']) ?></td>
+                        <td>
+                            <!-- Botón Editar -->
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarContratoModal<?= $contrato['id'] ?>">Editar</button>
+                            <!-- Botón Eliminar -->
+                            <form action="eliminar_contrato.php" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar este contrato?');">
+                                <input type="hidden" name="id" value="<?= $contrato['id'] ?>">
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
+                        </td>
                     </tr>
+
+                    <!-- Modal para Editar Contrato -->
+                    <div class="modal fade" id="editarContratoModal<?= $contrato['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="editarContratoModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editarContratoModalLabel">Editar Contrato</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="editar_contrato.php" method="POST">
+                                        <input type="hidden" name="id" value="<?= $contrato['id'] ?>">
+                                        <div class="form-group">
+                                            <label>Placa</label>
+                                            <input type="text" name="placa" class="form-control" value="<?= htmlspecialchars($contrato['placa']) ?>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cliente</label>
+                                            <input type="text" name="cliente" class="form-control" value="<?= htmlspecialchars($contrato['cliente']) ?>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mensualidad</label>
+                                            <input type="number" step="0.01" name="mensualidad_real" class="form-control" value="<?= htmlspecialchars($contrato['mensualidad_real']) ?>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Letra (Meses)</label>
+                                            <input type="number" name="letra" class="form-control" value="<?= htmlspecialchars($contrato['letra']) ?>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Inicial</label>
+                                            <input type="number" step="0.01" name="inicial" class="form-control" value="<?= htmlspecialchars($contrato['inicial']) ?>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Monto Total</label>
+                                            <input type="number" step="0.01" name="monto_total" class="form-control" value="<?= htmlspecialchars($contrato['monto_total']) ?>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Fecha de Pago</label>
+                                            <input type="date" name="fecha_pago" class="form-control" value="<?= htmlspecialchars($contrato['fecha_pago']) ?>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Fecha de Contrato</label>
+                                            <input type="date" name="fecha_contrato" class="form-control" value="<?= htmlspecialchars($contrato['fecha_contrato']) ?>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Teléfono</label>
+                                            <input type="text" name="telefono" class="form-control" value="<?= htmlspecialchars($contrato['telefono']) ?>">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 <?php endforeach; ?>
             </tbody>
         </table>
@@ -150,3 +217,4 @@ try {
     </script>
 </body>
 </html>
+
