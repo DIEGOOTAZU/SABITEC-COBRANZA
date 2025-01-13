@@ -86,6 +86,39 @@ try {
             color: #007bff;
             font-size: 20px;
         }
+       
+        .summary {
+        text-align: left; /* Mantiene todo alineado a la izquierda */
+        font-size: 1rem; /* Tamaño uniforme para todos */
+    }
+    .total-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px; /* Espaciado entre filas */
+    }
+    .label {
+        font-weight: bold;
+        margin-right: 10px; /* Espaciado entre el texto y el número */
+        color: #495057;
+        min-width: 120px; /* Asegura una alineación uniforme */
+    }
+    .value {
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+    .text-success {
+        background-color: #d4edda; /* Fondo verde claro */
+        color: #155724;
+    }
+    .text-danger {
+        background-color: #f8d7da; /* Fondo rojo claro */
+        color: #721c24;
+        margin-left: 4px; /* Ajuste para nivelar con el verde */
+    }
+</style>
+
+       
     </style>
 </head>
 <body>
@@ -204,21 +237,25 @@ try {
             <div class="text-center">
                 <span class="add-row-button" onclick="agregarFila()">➕ Agregar Fila</span>
             </div>
-
             <div class="summary mt-4">
-    <h5 class="d-flex justify-content-between">
-        <span>Total Cancelado:</span>
-        <span id="totalCancelado" class="text-success">$0.00</span>
-    </h5>
-    <h5 class="d-flex justify-content-between">
-        <span>Total Deuda:</span>
-        <span id="totalDeuda" class="text-danger">$<?= htmlspecialchars($cobranza['monto_total'] ?? '0.00') ?></span>
-    </h5>
+            <div class="summary mt-4">
+    <div class="total-row">
+        <span class="label">Total Cancelado:</span>
+        <span id="totalCancelado" class="value text-success">$0.00</span>
+    </div>
+    <div class="total-row">
+        <span class="label">Total Deuda:</span>
+        <span id="totalDeuda" class="value text-danger">$0.00</span>
+    </div>
 </div>
+
+
+
 
             <button type="submit" class="btn btn-success save-button mt-3">Guardar Cambios</button>
         </form>
     </div>
+    
 
     <script>
         // Funciones de interacción de la tabla
@@ -285,6 +322,8 @@ try {
             const parent = event.target.closest('.has-submenu');
             parent.classList.toggle('active');
         }
+
+
         function calcularTotales() {
     const importes = document.querySelectorAll('input[name="importe[]"]');
     let totalCancelado = 0;
@@ -310,6 +349,7 @@ document.querySelectorAll('input[name="importe[]"]').forEach(input => {
 calcularTotales();
 
 
+        
     </script>
 </body>
 </html>
