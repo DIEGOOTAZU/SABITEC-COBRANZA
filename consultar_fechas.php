@@ -204,6 +204,18 @@ try {
             <div class="text-center">
                 <span class="add-row-button" onclick="agregarFila()">➕ Agregar Fila</span>
             </div>
+
+            <div class="summary mt-4">
+    <h5 class="d-flex justify-content-between">
+        <span>Total Cancelado:</span>
+        <span id="totalCancelado" class="text-success">$0.00</span>
+    </h5>
+    <h5 class="d-flex justify-content-between">
+        <span>Total Deuda:</span>
+        <span id="totalDeuda" class="text-danger">$<?= htmlspecialchars($cobranza['monto_total'] ?? '0.00') ?></span>
+    </h5>
+</div>
+
             <button type="submit" class="btn btn-success save-button mt-3">Guardar Cambios</button>
         </form>
     </div>
@@ -273,6 +285,31 @@ try {
             const parent = event.target.closest('.has-submenu');
             parent.classList.toggle('active');
         }
+        function calcularTotales() {
+    const importes = document.querySelectorAll('input[name="importe[]"]');
+    let totalCancelado = 0;
+
+    importes.forEach(input => {
+        const valor = parseFloat(input.value) || 0;
+        totalCancelado += valor;
+    });
+
+    const montoTotal = parseFloat(<?= $cobranza['monto_total'] ?? 0 ?>);
+    const totalDeuda = montoTotal - totalCancelado;
+
+    document.getElementById('totalCancelado').textContent = `$${totalCancelado.toFixed(2)}`;
+    document.getElementById('totalDeuda').textContent = `$${totalDeuda.toFixed(2)}`;
+}
+
+// Escucha cambios en los importes
+document.querySelectorAll('input[name="importe[]"]').forEach(input => {
+    input.addEventListener('input', calcularTotales);
+});
+
+// Calcular totales iniciales
+calcularTotales();
+
+
     </script>
 </body>
 </html>
