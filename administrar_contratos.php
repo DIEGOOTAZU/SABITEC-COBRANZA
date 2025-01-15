@@ -165,7 +165,7 @@ try {
         <div class="has-submenu">
             <a href="#" class="submenu-toggle">Contratos</a>
             <div class="submenu">
-                <a href="agregar_contrato.php">Agregar Nuevo Contrato</a>
+                
                 <a href="administrar_contratos.php">Administrar Contratos</a>
             </div>
         </div>

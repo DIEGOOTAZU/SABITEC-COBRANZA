@@ -35,6 +35,13 @@ if (!isset($_SESSION['user_id'])) {
         .sidebar a:hover {
             background-color: #495057;
         }
+        .sidebar .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+        .sidebar .has-submenu.active .submenu {
+            display: block;
+        }
         .main-content {
             margin-left: 260px;
             padding: 20px;
@@ -98,9 +105,12 @@ if (!isset($_SESSION['user_id'])) {
             }
             .invoice-container {
                 position: absolute;
-                top: 0;
-                left: 0;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
                 width: 100%;
+                max-width: 800px;
+                text-align: center;
             }
             .add-row, .options-column {
                 display: none !important;
@@ -110,6 +120,62 @@ if (!isset($_SESSION['user_id'])) {
             }
         }
     </style>
+    <script>
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            const parent = event.target.closest('.has-submenu');
+            parent.classList.toggle('active');
+        }
+
+        function updateCurrencySymbol() {
+            const currency = document.getElementById('currency').value;
+            const grandTotalElement = document.getElementById('grand-total');
+            const grandTotalText = grandTotalElement.textContent;
+            const grandTotalValue = parseFloat(grandTotalText.match(/\d+(\.\d+)?/)[0]) || 0;
+
+            if (currency === 'USD') {
+                grandTotalElement.textContent = `Total: $${grandTotalValue.toFixed(2)}`;
+            } else if (currency === 'PEN') {
+                grandTotalElement.textContent = `Total: S/${grandTotalValue.toFixed(2)}`;
+            }
+        }
+
+        function updateTotal(input) {
+            const row = input.closest('tr');
+            const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
+            const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
+            const total = quantity * unitPrice;
+            row.querySelector('.total').value = total.toFixed(2);
+
+            updateGrandTotal();
+        }
+
+        function updateGrandTotal() {
+            let grandTotal = 0;
+            document.querySelectorAll('.total').forEach(input => {
+                grandTotal += parseFloat(input.value) || 0;
+            });
+            document.getElementById('grand-total').textContent = `Total: $${grandTotal.toFixed(2)}`;
+        }
+
+        function addRow() {
+            const tbody = document.getElementById('invoice-body');
+            const newRow = `
+                <tr>
+                    <td><input type="text" class="form-control" placeholder="Descripción"></td>
+                    <td><input type="number" class="form-control quantity" value="1" onchange="updateTotal(this)"></td>
+                    <td><input type="number" class="form-control unit-price" value="0" onchange="updateTotal(this)"></td>
+                    <td><input type="number" class="form-control total" value="0" readonly></td>
+                    <td class="options-column"><button class="btn btn-danger" onclick="removeRow(this)">Eliminar</button></td>
+                </tr>`;
+            tbody.insertAdjacentHTML('beforeend', newRow);
+        }
+
+        function removeRow(button) {
+            button.closest('tr').remove();
+            updateGrandTotal();
+        }
+    </script>
 </head>
 <body>
 
@@ -118,7 +184,14 @@ if (!isset($_SESSION['user_id'])) {
     <h3 class="text-center">Sabitec GPS</h3>
     <a href="index.php">Inicio</a>
     <div class="has-submenu">
-        <a href="#">Servicios</a>
+        <a href="#" onclick="toggleSubmenu(event)">Contratos</a>
+        <div class="submenu">
+          
+            <a href="administrar_contratos.php">Administrar Contratos</a>
+        </div>
+    </div>
+    <div class="has-submenu">
+        <a href="#" onclick="toggleSubmenu(event)">Servicios</a>
         <div class="submenu">
             <a href="consulta_pagos.php">Consulta de Pagos</a>
             <a href="generar_reportes.php">Generar Reportes</a>
@@ -131,7 +204,6 @@ if (!isset($_SESSION['user_id'])) {
     <a href="#">Tipos de Servicios</a>
     <a href="logout.php">Cerrar Sesión</a>
 </div>
-
 <!-- Main Content -->
 <div class="main-content">
     <div class="invoice-container">
@@ -190,40 +262,24 @@ if (!isset($_SESSION['user_id'])) {
             <button class="btn btn-primary add-row" onclick="addRow()">Agregar Fila</button>
         </div>
         <div class="invoice-footer">
-            <h4 id="grand-total">Total: 00.00</h4>
-            
+            <h4 id="grand-total">Total: $150.00</h4>
         </div>
     </div>
-</div>
-<div class="invoice-footer">
-    <div class="d-flex align-items-center justify-content-between">
-        <h4 id="grand-total">Total: 00.00</h4>
-        <div class="d-flex align-items-center">
-            <label for="currency" class="mr-2">Moneda:</label>
-            <select id="currency" class="form-control" style="width: 100px;" onchange="updateCurrencySymbol()">
-    <option value="USD" selected>Dólares</option>
-    <option value="PEN">Soles</option>
-</select>
-
-        </div>
-    </div>
-    <button class="btn-print mt-3" onclick="window.print()">Imprimir</button>
 </div>
 
 <script>
-   function updateCurrencySymbol() {
-    const currency = document.getElementById('currency').value; // Obtiene la moneda seleccionada
-    const grandTotalElement = document.getElementById('grand-total'); // Elemento del total
-    const grandTotalText = grandTotalElement.textContent; // Texto actual del total
-    const grandTotalValue = parseFloat(grandTotalText.match(/\d+(\.\d+)?/)[0]) || 0; // Extraer el valor numérico del total
+    function updateCurrencySymbol() {
+        const currency = document.getElementById('currency').value; // Obtener la moneda seleccionada
+        const grandTotalElement = document.getElementById('grand-total'); // Elemento del total
+        const grandTotalText = grandTotalElement.textContent; // Texto actual del total
+        const grandTotalValue = parseFloat(grandTotalText.match(/\d+(\.\d+)?/)[0]) || 0; // Extraer el valor numérico del total
 
-    if (currency === 'USD') {
-        grandTotalElement.textContent = `Total: $${grandTotalValue.toFixed(2)}`;
-    } else if (currency === 'PEN') {
-        grandTotalElement.textContent = `Total: S/${grandTotalValue.toFixed(2)}`;
+        if (currency === 'USD') {
+            grandTotalElement.textContent = `Total: $${grandTotalValue.toFixed(2)}`;
+        } else if (currency === 'PEN') {
+            grandTotalElement.textContent = `Total: S/${grandTotalValue.toFixed(2)}`;
+        }
     }
-}
-
 
     function updateTotal(input) {
         const row = input.closest('tr');
