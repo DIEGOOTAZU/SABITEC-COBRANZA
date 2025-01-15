@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <div class="left-section">
-        <img src="assets/images/sabit3.png" alt="Sabitec GPS Soporte">
+        <img src="assets/images/kaw.png" alt="Sabitec GPS Soporte">
         
     </div>
     <div class="right-panel">
